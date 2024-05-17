@@ -7,7 +7,7 @@ local function get_jdtls()
     local jdtls_path = jdtls:get_install_path()
     -- Obtain the path to the jar which runs the language server
     local launcher = vim.fn.glob(jdtls_path .. "/plugins/org.eclipse.equinox.launcher_*.jar")
-     -- Declare white operating system we are using, windows use win, macos use mac
+    -- Declare white operating system we are using, windows use win, macos use mac
     local SYSTEM = "linux"
     -- Obtain the path to configuration files for your specific operating system
     local config = jdtls_path .. "/config_" .. SYSTEM
@@ -32,10 +32,10 @@ local function get_bundles()
     local java_test = mason_registry.get_package("java-test")
     -- Obtain the full path to the directory where Mason has downloaded the Java Test binaries
     local java_test_path = java_test:get_install_path()
-     -- Add all of the Jars for running tests in debug mode to the bundles list
-     vim.list_extend(bundles, vim.split(vim.fn.glob(java_test_path .. "/extension/server/*.jar", 1), "\n"))
+    -- Add all of the Jars for running tests in debug mode to the bundles list
+    vim.list_extend(bundles, vim.split(vim.fn.glob(java_test_path .. "/extension/server/*.jar", 1), "\n"))
 
-     return bundles
+    return bundles
 end
 
 local function get_workspace()
@@ -52,7 +52,8 @@ end
 
 local function java_keymaps()
     -- Allow yourself to run JdtCompile as a Vim command
-    vim.cmd("command! -buffer -nargs=? -complete=custom,v:lua.require'jdtls'._complete_compile JdtCompile lua require('jdtls').compile(<f-args>)")
+    vim.cmd(
+    "command! -buffer -nargs=? -complete=custom,v:lua.require'jdtls'._complete_compile JdtCompile lua require('jdtls').compile(<f-args>)")
     -- Allow yourself/register to run JdtUpdateConfig as a Vim command
     vim.cmd("command! -buffer JdtUpdateConfig lua require('jdtls').update_project_config()")
     -- Allow yourself/register to run JdtBytecode as a Vim command
@@ -61,19 +62,26 @@ local function java_keymaps()
     vim.cmd("command! -buffer JdtJshell lua require('jdtls').jshell()")
 
     -- Set a Vim motion to <Space> + <Shift>J + o to organize imports in normal mode
-    vim.keymap.set('n', '<leader>Jo', "<Cmd> lua require('jdtls').organize_imports()<CR>", { desc = "[J]ava [O]rganize Imports" })
+    vim.keymap.set('n', '<leader>Jo', "<Cmd> lua require('jdtls').organize_imports()<CR>",
+        { desc = "[J]ava [O]rganize Imports" })
     -- Set a Vim motion to <Space> + <Shift>J + v to extract the code under the cursor to a variable
-    vim.keymap.set('n', '<leader>Jv', "<Cmd> lua require('jdtls').extract_variable()<CR>", { desc = "[J]ava Extract [V]ariable" })
+    vim.keymap.set('n', '<leader>Jv', "<Cmd> lua require('jdtls').extract_variable()<CR>",
+        { desc = "[J]ava Extract [V]ariable" })
     -- Set a Vim motion to <Space> + <Shift>J + v to extract the code selected in visual mode to a variable
-    vim.keymap.set('v', '<leader>Jv', "<Esc><Cmd> lua require('jdtls').extract_variable(true)<CR>", { desc = "[J]ava Extract [V]ariable" })
+    vim.keymap.set('v', '<leader>Jv', "<Esc><Cmd> lua require('jdtls').extract_variable(true)<CR>",
+        { desc = "[J]ava Extract [V]ariable" })
     -- Set a Vim motion to <Space> + <Shift>J + <Shift>C to extract the code under the cursor to a static variable
-    vim.keymap.set('n', '<leader>JC', "<Cmd> lua require('jdtls').extract_constant()<CR>", { desc = "[J]ava Extract [C]onstant" })
+    vim.keymap.set('n', '<leader>JC', "<Cmd> lua require('jdtls').extract_constant()<CR>",
+        { desc = "[J]ava Extract [C]onstant" })
     -- Set a Vim motion to <Space> + <Shift>J + <Shift>C to extract the code selected in visual mode to a static variable
-    vim.keymap.set('v', '<leader>JC', "<Esc><Cmd> lua require('jdtls').extract_constant(true)<CR>", { desc = "[J]ava Extract [C]onstant" })
+    vim.keymap.set('v', '<leader>JC', "<Esc><Cmd> lua require('jdtls').extract_constant(true)<CR>",
+        { desc = "[J]ava Extract [C]onstant" })
     -- Set a Vim motion to <Space> + <Shift>J + t to run the test method currently under the cursor
-    vim.keymap.set('n', '<leader>Jt', "<Cmd> lua require('jdtls').test_nearest_method()<CR>", { desc = "[J]ava [T]est Method" })
+    vim.keymap.set('n', '<leader>Jt', "<Cmd> lua require('jdtls').test_nearest_method()<CR>",
+        { desc = "[J]ava [T]est Method" })
     -- Set a Vim motion to <Space> + <Shift>J + t to run the test method that is currently selected in visual mode
-    vim.keymap.set('v', '<leader>Jt', "<Esc><Cmd> lua require('jdtls').test_nearest_method(true)<CR>", { desc = "[J]ava [T]est Method" })
+    vim.keymap.set('v', '<leader>Jt', "<Esc><Cmd> lua require('jdtls').test_nearest_method(true)<CR>",
+        { desc = "[J]ava [T]est Method" })
     -- Set a Vim motion to <Space> + <Shift>J + <Shift>T to run an entire test suite (class)
     vim.keymap.set('n', '<leader>JT', "<Cmd> lua require('jdtls').test_class()<CR>", { desc = "[J]ava [T]est Class" })
     -- Set a Vim motion to <Space> + <Shift>J + u to update the project configuration
@@ -95,7 +103,7 @@ local function setup_jdtls()
 
     -- Determine the root directory of the project by looking for these specific markers
     local root_dir = jdtls.setup.find_root({ '.git', 'mvnw', 'gradlew', 'pom.xml', 'build.gradle' });
-    
+
     -- Tell our JDTLS language features it is capable of
     local capabilities = {
         workspace = {
@@ -110,7 +118,7 @@ local function setup_jdtls()
 
     local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-    for k,v in pairs(lsp_capabilities) do capabilities[k] = v end
+    for k, v in pairs(lsp_capabilities) do capabilities[k] = v end
 
     -- Get the default extended client capablities of the JDTLS language server
     local extendedClientCapabilities = jdtls.extendedClientCapabilities
@@ -138,7 +146,7 @@ local function setup_jdtls()
         workspace_dir
     }
 
-     -- Configure settings in the JDTLS server
+    -- Configure settings in the JDTLS server
     local settings = {
         java = {
             -- Enable code formatting
@@ -219,7 +227,7 @@ local function setup_jdtls()
                 -- When generating code use code blocks
                 useBlocks = true
             },
-             -- If changes to the project will require the developer to update the projects configuration advise the developer before accepting the change
+            -- If changes to the project will require the developer to update the projects configuration advise the developer before accepting the change
             configuration = {
                 updateBuildConfiguration = "interactive"
             },
@@ -256,10 +264,19 @@ local function setup_jdtls()
         -- Unfortunately I have not found an elegant way to ensure this works 100%
         require('jdtls.dap').setup_dap_main_class_configs()
         -- Enable jdtls commands to be used in Neovim
-        require 'jdtls_setup'.add_commands()
+        require 'jdtls.setup'.add_commands()
         -- Refresh the codelens
         -- Code lens enables features such as code reference counts, implemenation counts, and more.
         vim.lsp.codelens.refresh()
+
+        require("lsp_signature").on_attach({
+            bind = true,
+            padding = "",
+            handler_opts = {
+                border = "rounded",
+            },
+            hint_prefix = "󱄑 ",
+        }, bufnr)
 
         -- Setup a function that automatically runs every time a java file is saved to refresh the code lens
         vim.api.nvim_create_autocmd("BufWritePost", {
